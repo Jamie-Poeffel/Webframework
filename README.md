@@ -1,6 +1,6 @@
 # Webframework TVX
 
-How to run it ?
+How to run it?
 
 ```bash
 npm run dev
