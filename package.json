@@ -1,0 +1,17 @@
+{
+  "name": "webframework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "mods/server/main.js",
+  "scripts": {
+    "dev": "node mods/server/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "express": "^5.2.1",
+    "jsdom": "^27.0.1"
+  }
+}

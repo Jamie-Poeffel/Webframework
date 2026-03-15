@@ -1,0 +1,18 @@
+import "./global.css"
+
+@main
+async function index() {
+    const res = await fetch('https://pokeapi.co/api/v2/berry');
+    const data = await res.json();
+    const list = data.results;
+
+    return (
+        <div class="list">
+            {for (const item of list) {
+                <div class="card">
+                    <p>{item.name}</p>
+                </div>
+            }}
+        </div>
+    );
+}
