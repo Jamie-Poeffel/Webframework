@@ -4,12 +4,12 @@ import fs from "fs";
 import path from "path";
 
 const app = express();
+const debug = false;
 
 function normalizeEventHandlers(html) {
     return html.replace(
         /(\w+)=\{call\s*\(\s*\(\s*\)\s*=>\s*([\s\S]*?)\s*\)\s*\}/g,
         (_, attr, body) => {
-            // Swap inner double quotes to single so they don't break the attribute
             const cleaned = body.trim().replace(/"/g, "'");
             return `${attr}="${cleaned}"`;
         }
@@ -18,32 +18,28 @@ function normalizeEventHandlers(html) {
 
 function normalizeAttributes(html) {
     return html.replace(/(\w+)="([^"]*)"/g, (match, attr, value) => {
-        // If value contains double quotes, swap inner ones to single
         const cleaned = value.replace(/"/g, "'");
         return `${attr}="${cleaned}"`;
     });
 }
 
-// Walk the string tracking braces BUT skip over quoted attribute values
 function convertJsx(rawHtml) {
     const html = normalizeEventHandlers(normalizeAttributes(rawHtml)); ;
     let result = "";
     let i = 0;
 
     while (i < html.length) {
-        // Skip over quoted strings (attribute values)
         if (html[i] === '"' || html[i] === "'") {
             const quote = html[i];
             result += html[i++];
             while (i < html.length && html[i] !== quote) {
                 result += html[i++];
             }
-            if (i < html.length) result += html[i++]; // closing quote
+            if (i < html.length) result += html[i++]; 
             continue;
         }
 
         if (html[i] === "{") {
-            // Find matching } counting depth, skipping quoted strings
             let depth = 1;
             let j = i + 1;
             while (j < html.length && depth > 0) {
@@ -179,9 +175,11 @@ export async function runPage(filePath, dom) {
 
     const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
-    console.log("=== GENERATED CODE ===");
-    console.log(code);
-    console.log("======================");
+    if (debug) {
+        console.log("=== GENERATED CODE ===");
+        console.log(code);
+        console.log("======================");
+    }
 
     const fn = new AsyncFunction(code);
 
